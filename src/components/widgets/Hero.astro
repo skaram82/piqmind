@@ -4,6 +4,9 @@ import Button from '~/components/ui/Button.astro';
 
 import type { Hero as Props } from '~/types';
 
+import p5Url from '~/assets/p5.min.js?url';
+import vantaTrunkUrl from '~/assets/vanta.trunk.min.js?url';
+
 const {
   title = await Astro.slots.render('title'),
   subtitle = await Astro.slots.render('subtitle'),
@@ -18,12 +21,70 @@ const {
 } = Astro.props;
 ---
 
-<section class="relative md:-mt-[76px] not-prose" {...id ? { id } : {}}>
+<section class="relative md:-mt-[120px] not-prose" {...id ? { id } : {}}>
   <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
     <slot name="bg">
       {bg ? <Fragment set:html={bg} /> : null}
+      <div id="vanta-background" class="absolute inset-0 opacity-70"></div>
     </slot>
   </div>
+  <script is:inline define:vars={{ p5Url, vantaTrunkUrl }}>
+    (() => {
+      const loadScript = (src) =>
+        new Promise((resolve, reject) => {
+          const s = document.createElement('script');
+          s.src = src;
+          s.onload = () => resolve(undefined);
+          s.onerror = () => reject(new Error(`Failed to load ${src}`));
+          document.head.appendChild(s);
+        });
+
+      const loadVantaOnce = () => {
+        if (window.__vantaScriptsPromise) return window.__vantaScriptsPromise;
+        window.__vantaScriptsPromise = (async () => {
+          // p5 is required by vanta.trunk
+          await loadScript(p5Url);
+          await loadScript(vantaTrunkUrl);
+        })();
+        return window.__vantaScriptsPromise;
+      };
+
+      const initOnPage = async () => {
+        const el = document.getElementById('vanta-background');
+        if (!el) return;
+
+        try {
+          await loadVantaOnce();
+          if (!window.VANTA?.TRUNK) return;
+
+          if (el.__vanta) el.__vanta.destroy();
+          el.__vanta = window.VANTA.TRUNK({
+            el,
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.0,
+            minWidth: 200.0,
+            scale: 1.0,
+            scaleMobile: 1.0,
+            color: 0x6b8df2,
+            backgroundColor: 0xffffff,
+            spacing: 9.0,
+            chaos: 4.0,
+          });
+        } catch {
+          // decorative effect; ignore failures
+        }
+      };
+
+      // Initial load
+      initOnPage();
+
+      // Re-init after Astro client-side navigations
+      document.addEventListener('astro:page-load', initOnPage);
+      document.addEventListener('astro:after-swap', initOnPage);
+    })();
+  </script>
   <div class="relative max-w-7xl mx-auto px-4 sm:px-6">
     <div class="pt-0 md:pt-[76px] pointer-events-none"></div>
     <div class="py-12 md:py-20">
@@ -53,6 +114,9 @@ const {
               />
             )
           }
+          <div class="mb-6">
+            <slot />
+          </div>
           {
             actions && (
               <div class="max-w-xs sm:max-w-md m-auto flex flex-nowrap flex-col sm:flex-row sm:justify-center gap-4 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">

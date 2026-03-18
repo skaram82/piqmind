@@ -90,3 +90,8 @@
 .dd *:first-child {
   margin-top: 0;
 }
+
+/* Custom code from here */
+.aw-link-active {
+  @apply font-bold text-[#6b8df2];
+}
