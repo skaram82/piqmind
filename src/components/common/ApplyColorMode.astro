@@ -4,7 +4,15 @@
 
 <script is:inline>
   // Always force light theme; ignore system preference and any stored theme
+  try {
+    // Normalize any previously stored theme to light
+    localStorage.setItem('theme', 'light');
+  } catch {
+    // localStorage may be unavailable (privacy modes); ignore
+  }
+
   document.documentElement.classList.remove('dark');
+  document.documentElement.removeAttribute('data-theme');
 
   const matches = document.querySelectorAll('[data-aw-toggle-color-scheme] > input');
   if (matches && matches.length) {
