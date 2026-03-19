@@ -2,13 +2,13 @@ import { getPermalink } from './utils/permalinks';
 
 export const headerData = {
   links: [
-    {
-      text: 'About',
-      href: getPermalink('/#'),
-    },
+    // {
+    //   text: 'About',
+    //   href: getPermalink('/about'),
+    // },
     {
       text: 'Services & Tools',
-      href: getPermalink('/#'),
+      href: getPermalink('tools', 'category'),
     },
     {
       text: 'News',
@@ -31,8 +31,8 @@ export const footerData = {
     {
       title: 'Quick Navigation',
       links: [
-        { text: 'About', href: getPermalink('/#') },
-        { text: 'Services & Tools', href: getPermalink('/#') },
+        // { text: 'About', href: getPermalink('/about') },
+        { text: 'Services & Tools', href: getPermalink('tools', 'category') },
         { text: 'News', href: getPermalink('news', 'category') },
         { text: 'Contact', href: getPermalink('/contact') },
       ],
@@ -41,7 +41,7 @@ export const footerData = {
       title: 'Company Info',
       htmlContent: `
       <p>PiQ Mind Single Member P.C.</p>
-      <p>Kominon 80, GR55132, Kalamaria, Greece</p>
+      <p>Komninon 80, GR55132, Kalamaria, Greece</p>
       <p>info@piqmind.com</p>`,
     },
   ],
