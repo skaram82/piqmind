@@ -210,7 +210,7 @@ const VariableProximity = forwardRef<HTMLSpanElement, VariableProximityProps>(
         onClick={onClick}
         style={{
           display: 'inline',
-          fontFamily: '"Roboto Flex Variable", "Roboto Flex", var(--aw-font-heading), sans-serif',
+          // fontFamily: '"Roboto Flex Variable", "Roboto Flex", var(--aw-font-heading), sans-serif',
           ...style,
         }}
         className={className}
@@ -247,4 +247,3 @@ const VariableProximity = forwardRef<HTMLSpanElement, VariableProximityProps>(
 
 VariableProximity.displayName = 'VariableProximity';
 export default VariableProximity;
-
